@@ -14,7 +14,7 @@ Make sure to cite those if you use this repo!
 You can install `st_rle` from PyPI:
 
 ```bash
-pip install st_rle
+python3 -m pip install st_rle
 ```
 
 ## Usage
@@ -24,19 +24,17 @@ Here is a basic use case example using a negative binomial distributed matrix:
 ```python
 import numpy as np
 from st_rle.rle import do_depth_normalization
-from scipy.stats import nbinom
+from scipy.sparse import csc_matrix, csr_matrix, lil_matrix
 
-# Generate a negative binomial distributed matrix
-np.random.seed(0)
-n = 100  # number of genes
-m = 20  # number of samples
-data = nbinom.rvs(10, 0.5, size=(n, m)).astype(np.float64)
+# We'll create a random NB distributed 'full transcriptome' size dataset of 5000 samples
+in_mat = np.random.negative_binomial(.1, .1, size=(20000,5000))
 
-# Normalize the data
-normalized_data = do_depth_normalization(data)
+# And normalize it in different formats
+in_mat_norm = do_depth_normalization(in_mat.astype(float))
+in_mat_norm2 = do_depth_normalization(csc_matrix(in_mat.astype(float)))
+in_mat_norm3 = do_depth_normalization(csr_matrix(in_mat.astype(float)))
 ```
 
-In this example, data is a 100x20 matrix representing the count data for 100 genes across 20 samples. The function new_calcFactorRLE(data) calculates the size factors for the data, and do_depth_normalization(data, size_factors) normalizes the data using these size factors.
 
 ## License
 
